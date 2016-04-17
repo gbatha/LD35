@@ -35,7 +35,7 @@ public class ShapeShifterController : MonoBehaviour {
 	[SerializeField]
 	GameObject solidSprite;
 	[SerializeField]
-	public BoxCollider solidCollider;
+	public CapsuleCollider solidCollider;
 	[SerializeField]
 	public SphereCollider liquidCollider;
 
