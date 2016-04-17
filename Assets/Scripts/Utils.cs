@@ -87,15 +87,15 @@ public class Utils {
 	public static void PlayParticleSystem(ParticleSystem tp, bool letPlay){
 		if(letPlay)
 		{
-			if(!tp.isPlaying)
-			{
+//			if(!tp.isPlaying)
+//			{
 				tp.Play();
-			}
+//			}
 		}else{
-			if(tp.isPlaying)
-			{
+//			if(tp.isPlaying)
+//			{
 				tp.Stop();
-			}
+//			}
 		}
 	}
 }

@@ -10,10 +10,11 @@ public class FaceLook : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		Vector2 offset = new Vector2 (Input.GetAxis ("Horizontal"), Input.GetAxis ("Vertical"));
+		Vector3 offsetTarget = new Vector3 (Input.GetAxis ("Horizontal"), Input.GetAxis ("Vertical"), 0f);
+		offsetTarget *= radius;
+
 		Vector3 pos = transform.localPosition;
-		pos.x = offset.x * radius;
-		pos.y = offset.y * radius;
+		pos = Vector3.Lerp (transform.localPosition, offsetTarget, Time.deltaTime * 100f);
 		transform.localPosition = pos;
 	}
 }
