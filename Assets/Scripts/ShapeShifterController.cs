@@ -53,8 +53,13 @@ public class ShapeShifterController : MonoBehaviour {
 			targetVelocity = transform.TransformDirection(targetVelocity);
 			targetVelocity *= speed;
 			//if we're gas and the player isn't inputting, make the damping even harder
-			float ourDamping = (shape == ShapeMode.Gas && new Vector2 (Input.GetAxis ("Horizontal"), Input.GetAxis ("Vertical")) == Vector2.zero) ? damping / 2f : damping;
+			bool playerInput = (new Vector2 (Input.GetAxis ("Horizontal"), Input.GetAxis ("Vertical")) != Vector2.zero) ? true : false;
+			Debug.Log (playerInput);
+
+			float ourDamping = (shape != ShapeMode.Solid && !playerInput) ? velocityDampingGas / 2f : damping;
 			targetVelocity = Vector3.Lerp (GetComponent<Rigidbody> ().velocity, targetVelocity, Time.deltaTime * ourDamping);
+
+			Debug.Log (targetVelocity.x);
 
 			// Apply a force that attempts to reach our target velocity
 			Vector3 velocity = GetComponent<Rigidbody>().velocity;
