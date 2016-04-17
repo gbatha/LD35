@@ -4,6 +4,7 @@ using System.Collections;
 [RequireComponent (typeof (Rigidbody))]
 
 public class ShapeShifterController : MonoBehaviour {
+	//state variables
 	public float solidSpeed = 10.0f;
 	public float liquidSpeed = 6f;
 	public float gasSpeed = 2f;
@@ -12,21 +13,36 @@ public class ShapeShifterController : MonoBehaviour {
 	public float velocityDampingLiquid = 1f;
 	public float velocityDampingGas = .5f;
 
+	//public physics
 	public float gravity = 10.0f;
 	public float maxVelocityChange = 10.0f;
 	public bool canJump = true;
 	public float jumpHeight = 2.0f;
 	private bool grounded = false;
 
+	//internal physics
 	float speed = 10.0f;
 	float damping = 5000f;
 
+	//shape physical state variables
 	public ShapeMode shape = ShapeMode.Solid;
 	float gravityMultiplier = 1f;
+
+	[SerializeField]
+	ParticleSystem waterParticles;
+	[SerializeField]
+	ParticleSystem gasParticles;
+	[SerializeField]
+	GameObject solidSprite;
+
 
 	void Awake () {
 		GetComponent<Rigidbody>().freezeRotation = true;
 		GetComponent<Rigidbody>().useGravity = false;
+	}
+
+	void Start(){
+		SwitchShape (ShapeMode.Solid);
 	}
 
 	void Update(){
@@ -103,18 +119,27 @@ public class ShapeShifterController : MonoBehaviour {
 
 	void SwitchShape(ShapeMode shapeIn){
 		shape = shapeIn;
+
+		//deactivate everything
+		Utils.PlayParticleSystem(waterParticles, false);
+		Utils.PlayParticleSystem(gasParticles, false);
+		solidSprite.SetActive (false);
+
 		switch (shape) {
 		case ShapeMode.Solid:
 			speed = solidSpeed;
 			damping = velocityDampingSolid;
+			solidSprite.SetActive (true);
 			break;
 		case ShapeMode.Liquid:
 			speed = liquidSpeed;
 			damping = velocityDampingLiquid;
+			Utils.PlayParticleSystem(waterParticles, true);
 			break;
 		case ShapeMode.Gas:
 			speed = gasSpeed;
 			damping = velocityDampingGas;
+			Utils.PlayParticleSystem(gasParticles, true);
 			break;
 		}
 	}
