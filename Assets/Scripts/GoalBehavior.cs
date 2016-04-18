@@ -16,7 +16,7 @@ public class GoalBehavior : MonoBehaviour {
 		if (other.gameObject.tag == "Player" && !triggered) {
 			for (int i = 0; i < fireWorks.Length; i++) {
 				Utils.PlayParticleSystem (fireWorks [i], true);
-				StartCoroutine (delayLoadNextScene (3f));
+				StartCoroutine (delayLoadNextScene (5f));
 			}
 		}
 	}

@@ -34,6 +34,9 @@ public class ShapeShifterController : MonoBehaviour {
 	float gravityMultiplier = 1f;
 
 	[SerializeField]
+	TextMesh numberText;
+
+	[SerializeField]
 	ParticleSystem waterParticles;
 	[SerializeField]
 	ParticleSystem gasParticles;
@@ -53,12 +56,12 @@ public class ShapeShifterController : MonoBehaviour {
 	void Start(){
 		SwitchShape (ShapeMode.Solid, false);
 
-		shiftsLeft = maxShifts;
+		setShiftsLeft (maxShifts);
 	}
 
 	void Respawn(){
 		SwitchShape (ShapeMode.Solid, false);
-		shiftsLeft = maxShifts;
+		setShiftsLeft (maxShifts);
 		transform.position = GameObject.FindGameObjectWithTag ("Respawn").transform.position;
 	}
 
@@ -131,6 +134,11 @@ public class ShapeShifterController : MonoBehaviour {
 		}
 	}
 
+	void setShiftsLeft(int val){
+		shiftsLeft = val;
+		numberText.text = shiftsLeft.ToString();
+	}
+
 	//pass in +1 to shift up, -1 to shift down
 	//solid = 0, liquid = 1, gas = 2
 	void SwitchShapeBy(int amount){
@@ -185,7 +193,10 @@ public class ShapeShifterController : MonoBehaviour {
 			//set!
 			shape = shapeIn;
 			if (subtractFromMax) {
-				shiftsLeft = Mathf.Clamp (shiftsLeft - 1, 0, maxShifts);
+				setShiftsLeft (shiftsLeft - 1);
+				if (shiftsLeft < 0) {
+					Respawn ();
+				}
 			}
 		}
 	}
