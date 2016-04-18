@@ -51,13 +51,13 @@ public class ShapeShifterController : MonoBehaviour {
 	}
 
 	void Start(){
-		SwitchShape (ShapeMode.Solid);
+		SwitchShape (ShapeMode.Solid, false);
 
 		shiftsLeft = maxShifts;
 	}
 
 	void Respawn(){
-		SwitchShape (ShapeMode.Solid);
+		SwitchShape (ShapeMode.Solid, false);
 		shiftsLeft = maxShifts;
 		transform.position = GameObject.FindGameObjectWithTag ("Respawn").transform.position;
 	}
@@ -141,7 +141,7 @@ public class ShapeShifterController : MonoBehaviour {
 		}
 	}
 
-	void SwitchShape(ShapeMode shapeIn){
+	void SwitchShape(ShapeMode shapeIn, bool subtractFromMax = true){
 		if (shape != shapeIn) {
 			//deactivate everything
 			if (shapeIn != ShapeMode.Liquid)
@@ -184,6 +184,9 @@ public class ShapeShifterController : MonoBehaviour {
 
 			//set!
 			shape = shapeIn;
+			if (subtractFromMax) {
+				shiftsLeft = Mathf.Clamp (shiftsLeft - 1, 0, maxShifts);
+			}
 		}
 	}
 }
