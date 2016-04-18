@@ -16,7 +16,6 @@ public class GrateBehavior : MonoBehaviour {
 
 	void OnTriggerStay(Collider other) {
 		if (other.gameObject.tag == "Player") {
-			Debug.Log ("enter");
 			HandleCollision (other);
 		}
 	}
@@ -33,10 +32,8 @@ public class GrateBehavior : MonoBehaviour {
 			ShapeMode shape = other.gameObject.GetComponent<ShapeShifterController> ().shape;
 			//if the player is solid, we don't ignore the collision
 			if (shape == ShapeMode.Solid) {
-				Debug.Log ("DO NOT IGNORE");
 				Physics.IgnoreCollision (other.gameObject.GetComponent<ShapeShifterController> ().solidCollider, mainCollider, false);
 			} else {
-				Debug.Log ("IGNORE");
 				//otherwise, we ignore the collision
 				Physics.IgnoreCollision (other.gameObject.GetComponent<ShapeShifterController> ().solidCollider, mainCollider);
 				if (!ignoredLiquid) {

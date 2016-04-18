@@ -4,6 +4,11 @@ using System.Collections;
 [RequireComponent (typeof (Rigidbody))]
 
 public class ShapeShifterController : MonoBehaviour {
+	//level specific variables
+	[SerializeField]
+	int maxShifts = 5;
+	int shiftsLeft;
+
 	//state variables
 	public float solidSpeed = 10.0f;
 	public float liquidSpeed = 6f;
@@ -47,6 +52,14 @@ public class ShapeShifterController : MonoBehaviour {
 
 	void Start(){
 		SwitchShape (ShapeMode.Solid);
+
+		shiftsLeft = maxShifts;
+	}
+
+	void Respawn(){
+		SwitchShape (ShapeMode.Solid);
+		shiftsLeft = maxShifts;
+		transform.position = GameObject.FindGameObjectWithTag ("Respawn").transform.position;
 	}
 
 	void Update(){
@@ -118,47 +131,61 @@ public class ShapeShifterController : MonoBehaviour {
 		}
 	}
 
-	void SwitchShape(ShapeMode shapeIn){
-		
-		//deactivate everything
-		if(shapeIn != ShapeMode.Liquid) Utils.PlayParticleSystem(waterParticles, false);
-		if(shapeIn != ShapeMode.Gas) Utils.PlayParticleSystem(gasParticles, false);
-		if (shapeIn != ShapeMode.Solid) solidSprite.SendMessage ("setTargetScale", Vector3.zero);
-
-		switch (shapeIn) {
-		case ShapeMode.Solid:
-			speed = solidSpeed;
-			damping = velocityDampingSolid;
-			solidSprite.SendMessage ("setTargetScale", Vector3.one);
-
-			solidCollider.enabled = true;
-			liquidCollider.enabled = false;
-			break;
-		case ShapeMode.Liquid:
-			speed = liquidSpeed;
-			damping = velocityDampingLiquid;
-			Utils.PlayParticleSystem (waterParticles, true);
-
-			solidCollider.enabled = false;
-			liquidCollider.enabled = true;
-			break;
-		case ShapeMode.Gas:
-			//jump!
-			Vector3 velocity = GetComponent<Rigidbody>().velocity;
-			GetComponent<Rigidbody>().velocity = new Vector3(velocity.x, CalculateJumpVerticalSpeed() * 0.15f, velocity.z);
-
-			speed = gasSpeed;
-			damping = velocityDampingGas;
-			Utils.PlayParticleSystem(gasParticles, true);
-
-			solidCollider.enabled = true;
-			liquidCollider.enabled = false;
-			break;
+	//pass in +1 to shift up, -1 to shift down
+	//solid = 0, liquid = 1, gas = 2
+	void SwitchShapeBy(int amount){
+		int newShape = Mathf.Clamp( (int)shape + amount, 0, 2);
+		//make sure we're actually changing
+		if(newShape != (int)shape){
+			SwitchShape ((ShapeMode)newShape);
 		}
+	}
 
-		//set!
-		shape = shapeIn;
+	void SwitchShape(ShapeMode shapeIn){
+		if (shape != shapeIn) {
+			//deactivate everything
+			if (shapeIn != ShapeMode.Liquid)
+				Utils.PlayParticleSystem (waterParticles, false);
+			if (shapeIn != ShapeMode.Gas)
+				Utils.PlayParticleSystem (gasParticles, false);
+			if (shapeIn != ShapeMode.Solid)
+				solidSprite.SendMessage ("setTargetScale", Vector3.zero);
+
+			switch (shapeIn) {
+			case ShapeMode.Solid:
+				speed = solidSpeed;
+				damping = velocityDampingSolid;
+				solidSprite.SendMessage ("setTargetScale", Vector3.one);
+
+				solidCollider.enabled = true;
+				liquidCollider.enabled = false;
+				break;
+			case ShapeMode.Liquid:
+				speed = liquidSpeed;
+				damping = velocityDampingLiquid;
+				Utils.PlayParticleSystem (waterParticles, true);
+
+				solidCollider.enabled = false;
+				liquidCollider.enabled = true;
+				break;
+			case ShapeMode.Gas:
+			//jump!
+				Vector3 velocity = GetComponent<Rigidbody> ().velocity;
+				GetComponent<Rigidbody> ().velocity = new Vector3 (velocity.x, CalculateJumpVerticalSpeed () * 0.15f, velocity.z);
+
+				speed = gasSpeed;
+				damping = velocityDampingGas;
+				Utils.PlayParticleSystem (gasParticles, true);
+
+				solidCollider.enabled = true;
+				liquidCollider.enabled = false;
+				break;
+			}
+
+			//set!
+			shape = shapeIn;
+		}
 	}
 }
 
-public enum ShapeMode{ Solid, Liquid, Gas };
+public enum ShapeMode{ Solid = 0, Liquid = 1, Gas = 2 };
