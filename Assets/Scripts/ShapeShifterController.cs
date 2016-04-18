@@ -51,6 +51,11 @@ public class ShapeShifterController : MonoBehaviour {
 	void Awake () {
 		GetComponent<Rigidbody> ().freezeRotation = true;
 		GetComponent<Rigidbody>().useGravity = false;
+
+		//if we put in practically infinity shifts, just get rid of the thought bubble
+		if (maxShifts >= 999) {
+			GameObject.Find ("Thought Bubble").SetActive (false);
+		}
 	}
 
 	void Start(){
