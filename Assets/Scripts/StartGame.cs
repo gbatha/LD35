@@ -9,7 +9,7 @@ public class StartGame : MonoBehaviour {
 	bool loading = false;
 
 	void Update() {
-		if (Input.anyKeyDown && !loading) {
+		if (Input.GetKeyDown(KeyCode.Space) && !loading) {
 			loading = true;
 			SceneManager.LoadScene (level);
 		}
