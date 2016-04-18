@@ -39,6 +39,8 @@ public class ShapeShifterController : MonoBehaviour {
 	[SerializeField]
 	ParticleSystem waterParticles;
 	[SerializeField]
+	GameObject waterBody;
+	[SerializeField]
 	ParticleSystem gasParticles;
 	[SerializeField]
 	GameObject solidSprite;
@@ -158,8 +160,10 @@ public class ShapeShifterController : MonoBehaviour {
 	void SwitchShape(ShapeMode shapeIn, bool subtractFromMax = true){
 		if (shape != shapeIn) {
 			//deactivate everything
-			if (shapeIn != ShapeMode.Liquid)
+			if (shapeIn != ShapeMode.Liquid) {
 				Utils.PlayParticleSystem (waterParticles, false);
+				waterBody.SetActive (false);
+			}
 			if (shapeIn != ShapeMode.Gas)
 				Utils.PlayParticleSystem (gasParticles, false);
 			if (shapeIn != ShapeMode.Solid)
@@ -178,6 +182,7 @@ public class ShapeShifterController : MonoBehaviour {
 				speed = liquidSpeed;
 				damping = velocityDampingLiquid;
 				Utils.PlayParticleSystem (waterParticles, true);
+				waterBody.SetActive (true);
 
 				solidCollider.enabled = false;
 				liquidCollider.enabled = true;
