@@ -48,6 +48,8 @@ public class ShapeShifterController : MonoBehaviour {
 	public CapsuleCollider solidCollider;
 	[SerializeField]
 	public SphereCollider liquidCollider;
+	[SerializeField]
+	public BoxCollider gasCollider;
 
 
 	void Awake () {
@@ -68,6 +70,8 @@ public class ShapeShifterController : MonoBehaviour {
 	}
 
 	void Respawn(){
+		//change shapes twice to force a state change
+		SwitchShape (ShapeMode.Liquid, false);
 		SwitchShape (ShapeMode.Solid, false);
 		setShiftsLeft (maxShifts);
 		transform.position = GameObject.FindGameObjectWithTag ("Respawn").transform.position;
@@ -177,6 +181,7 @@ public class ShapeShifterController : MonoBehaviour {
 
 				solidCollider.enabled = true;
 				liquidCollider.enabled = false;
+				gasCollider.enabled = false;
 				break;
 			case ShapeMode.Liquid:
 				speed = liquidSpeed;
@@ -186,6 +191,7 @@ public class ShapeShifterController : MonoBehaviour {
 
 				solidCollider.enabled = false;
 				liquidCollider.enabled = true;
+				gasCollider.enabled = false;
 				break;
 			case ShapeMode.Gas:
 			//jump!
@@ -196,8 +202,9 @@ public class ShapeShifterController : MonoBehaviour {
 				damping = velocityDampingGas;
 				Utils.PlayParticleSystem (gasParticles, true);
 
-				solidCollider.enabled = true;
+				solidCollider.enabled = false;
 				liquidCollider.enabled = false;
+				gasCollider.enabled = true;
 				break;
 			}
 

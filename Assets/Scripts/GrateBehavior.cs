@@ -35,7 +35,7 @@ public class GrateBehavior : MonoBehaviour {
 				Physics.IgnoreCollision (other.gameObject.GetComponent<ShapeShifterController> ().solidCollider, mainCollider, false);
 			} else {
 				//otherwise, we ignore the collision
-				Physics.IgnoreCollision (other.gameObject.GetComponent<ShapeShifterController> ().solidCollider, mainCollider);
+				Physics.IgnoreCollision (other.gameObject.GetComponent<ShapeShifterController> ().gasCollider, mainCollider);
 				if (!ignoredLiquid) {
 					Physics.IgnoreCollision (other.gameObject.GetComponent<ShapeShifterController> ().liquidCollider, mainCollider);
 					ignoredLiquid = true;
