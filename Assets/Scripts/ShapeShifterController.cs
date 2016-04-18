@@ -4,6 +4,18 @@ using System.Collections;
 [RequireComponent (typeof (Rigidbody))]
 
 public class ShapeShifterController : MonoBehaviour {
+	//audio
+	[SerializeField]
+	AudioClip solidClip;
+	[SerializeField]
+	AudioClip liquidClip;
+	[SerializeField]
+	AudioClip gasClip;
+
+	AudioSource sfxSolid;
+	AudioSource sfxLiquid;
+	AudioSource sfxGas;
+
 	//level specific variables
 	[SerializeField]
 	int maxShifts = 5;
@@ -35,6 +47,8 @@ public class ShapeShifterController : MonoBehaviour {
 
 	[SerializeField]
 	TextMesh numberText;
+	[SerializeField]
+	Transform leafAnchor;
 
 	[SerializeField]
 	ParticleSystem waterParticles;
@@ -49,7 +63,7 @@ public class ShapeShifterController : MonoBehaviour {
 	[SerializeField]
 	public SphereCollider liquidCollider;
 	[SerializeField]
-	public BoxCollider gasCollider;
+	public CapsuleCollider gasCollider;
 
 
 	void Awake () {
@@ -63,6 +77,9 @@ public class ShapeShifterController : MonoBehaviour {
 	}
 
 	void Start(){
+		sfxSolid = Utils.AddAudio (gameObject, solidClip, false, false, 1f);
+		sfxLiquid = Utils.AddAudio (gameObject, liquidClip, false, false, 0.8f);
+		sfxGas = Utils.AddAudio (gameObject, gasClip, false, false, 0.8f);
 //		SwitchShape (ShapeMode.Solid, false);
 //
 //		setShiftsLeft (maxShifts);
@@ -119,6 +136,12 @@ public class ShapeShifterController : MonoBehaviour {
 				GetComponent<Rigidbody>().velocity = new Vector3(velocity.x, CalculateJumpVerticalSpeed(), velocity.z);
 			}
 		}
+
+		//animate the leaf!!
+		float rotZ = 0f;
+		Vector3 vel = GetComponent<Rigidbody> ().velocity;
+		rotZ = Utils.map (vel.x, -solidSpeed, solidSpeed, 269.7f, 360.89f);
+		leafAnchor.localEulerAngles = new Vector3 (leafAnchor.localEulerAngles.x, leafAnchor.localEulerAngles.y, rotZ);
 
 		// We apply gravity manually for more tuning control
 		if(!GetComponent<Rigidbody>().useGravity)
@@ -182,6 +205,7 @@ public class ShapeShifterController : MonoBehaviour {
 				solidCollider.enabled = true;
 				liquidCollider.enabled = false;
 				gasCollider.enabled = false;
+				if(subtractFromMax) sfxSolid.Play ();
 				break;
 			case ShapeMode.Liquid:
 				speed = liquidSpeed;
@@ -192,6 +216,7 @@ public class ShapeShifterController : MonoBehaviour {
 				solidCollider.enabled = false;
 				liquidCollider.enabled = true;
 				gasCollider.enabled = false;
+				if(subtractFromMax) sfxLiquid.Play ();
 				break;
 			case ShapeMode.Gas:
 			//jump!
@@ -205,6 +230,7 @@ public class ShapeShifterController : MonoBehaviour {
 				solidCollider.enabled = false;
 				liquidCollider.enabled = false;
 				gasCollider.enabled = true;
+				if(subtractFromMax) sfxGas.Play ();
 				break;
 			}
 

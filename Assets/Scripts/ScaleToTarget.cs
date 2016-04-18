@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class ScaleToTarget : MonoBehaviour {
-	Vector3 target = Vector3.one;
+	public Vector3 target = Vector3.one;
 	float speed = 4f;
 	float sensitivity = 0.02f;
 	float delay = 0f;

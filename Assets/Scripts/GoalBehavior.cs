@@ -25,6 +25,8 @@ public class GoalBehavior : MonoBehaviour {
 		if (nextLevel != "") {
 			yield return new WaitForSeconds (delay);
 			SceneManager.LoadScene (nextLevel);
+		} else {
+			BroadcastMessage ("setTargetScale", Vector3.one);
 		}
 	}
 }
