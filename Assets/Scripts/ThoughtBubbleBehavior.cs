@@ -25,7 +25,6 @@ public class ThoughtBubbleBehavior : MonoBehaviour {
 		transform.position = pos;
 		for (int i = 0; i < trailBubbles.Length; i++) {
 			float amount = ((float)i + 1f) / ((float)trailBubbles.Length + 2f);
-			Debug.Log (amount);
 			trailBubbles [i].position = Vector3.Lerp (anchor.position, transform.position, amount);
 		}
 	}

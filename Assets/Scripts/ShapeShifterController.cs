@@ -54,9 +54,10 @@ public class ShapeShifterController : MonoBehaviour {
 	}
 
 	void Start(){
-		SwitchShape (ShapeMode.Solid, false);
-
-		setShiftsLeft (maxShifts);
+//		SwitchShape (ShapeMode.Solid, false);
+//
+//		setShiftsLeft (maxShifts);
+		Respawn();
 	}
 
 	void Respawn(){
